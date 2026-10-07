@@ -52,10 +52,10 @@ public class FrogGrapple : MonoBehaviour
 
             Vector3 toTarget = (grappleTargetPoint - transform.position);
             
-            // Move rapidly toward the grapple point
+            
             controller.Move(grappleDirection * grappleSpeed * Time.deltaTime);
 
-            // Check if we have passed or reached the target
+            
             if (Vector3.Dot(toTarget, grappleDirection) < 0f || toTarget.magnitude < 1.0f)
             {
                 ReleaseSlingshot();
@@ -90,12 +90,12 @@ public class FrogGrapple : MonoBehaviour
         isGrappling = false;
         lineRenderer.enabled = false; 
 
-        // Re-enable normal movement script
+        
         if (tpsController != null) 
         {
             tpsController.enabled = true;
             
-            // Hand off our flying momentum to the controller so we don't drop dead instantly!
+            
             Vector3 launchVelocity = grappleDirection * grappleSpeed * exitBoostMultiplier;
             tpsController.SendMessage("AddMomentum", launchVelocity, SendMessageOptions.DontRequireReceiver);
         }

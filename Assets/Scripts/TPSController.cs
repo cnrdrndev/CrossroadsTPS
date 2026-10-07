@@ -35,7 +35,7 @@ public class TPSController : MonoBehaviour
 
     private Vector3 velocity;
     private bool isGrounded;
-    private Vector3 startPosition; // Saves your initial spawn point
+    private Vector3 startPosition;
 
     void Start()
     {
@@ -53,27 +53,27 @@ public class TPSController : MonoBehaviour
             tongueOrigin = transform;
         }
 
-        // Save the starting position for respawns
+        
         startPosition = transform.position;
     }
 
     void Update()
     {
-        // 1. Fall / Respawn Check (If frog drops below Y = -10)
+        
         if (transform.position.y < -10f)
         {
             RespawnPlayer();
             return;
         }
 
-        // 2. Ground Check
+        
         isGrounded = controller.isGrounded;
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2.0f;
         }
 
-        // --- GRAPPLE STATE ---
+        
         if (isGrappling)
         {
             lineRenderer.SetPosition(0, tongueOrigin.position);
@@ -107,16 +107,16 @@ public class TPSController : MonoBehaviour
             return; 
         }
 
-        // 3. Get Input (WASD)
+       
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
         Vector3 direction = new Vector3(moveX, 0f, moveZ).normalized;
 
-        // 4. Sprinting (Left Shift)
+        
         bool isSprinting = Input.GetKey(KeyCode.LeftShift) && moveZ > 0; 
         float currentSpeed = isSprinting ? sprintSpeed : walkSpeed;
 
-        // 5. Standard Camera-Relative Movement
+        
         if (direction.magnitude >= 0.1f)
         {
             Vector3 camForward = cameraTransform.forward;
@@ -135,26 +135,26 @@ public class TPSController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
-        // 6. Roll Mechanic (Left Ctrl or 'C')
+        
         if ((Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.C)) && isGrounded && direction.magnitude >= 0.1f)
         {
             StartCoroutine(PerformRoll());
         }
 
-        // 7. Jump
+        
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
         }
 
-        // 8. Glide Momentum
+        
         if (glideMomentum.magnitude > 0.2f)
         {
             controller.Move(glideMomentum * Time.deltaTime);
             glideMomentum = Vector3.Lerp(glideMomentum, Vector3.zero, 3.5f * Time.deltaTime);
         }
 
-        // 9. Apply Gravity
+       
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
